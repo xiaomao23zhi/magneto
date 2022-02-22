@@ -1,2 +1,2 @@
-# magneto
-Mutant Notebook
+# magnote
+a Mutant Notebook
