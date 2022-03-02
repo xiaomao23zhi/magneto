@@ -1,0 +1,1 @@
+docker build -t magnote.pub/dl-notebook:cuda-10.1 .
