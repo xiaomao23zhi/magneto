@@ -1,0 +1,56 @@
+gateway:
+  # The image to use for the gateway-server pod.
+  image:
+    name: daskgateway/dask-gateway-server
+    tag: 0.9.0
+  backend:
+    # The image to use for both schedulers and workers.
+    image:
+      name: daskgateway/dask-gateway
+      tag: 0.9.0
+  auth:
+    type: jupyterhub
+    jupyterhub:
+      apiToken: "65be3d7cc1302d24059a9bdd93f03850e8f920ae3475ebab24a5f836b7bacfa3"
+      apiUrl: http://proxy-public.jupyter:80/jupyter/hub/api
+  prefix: "/jupyter/services/dask-gateway"  # Users connect to the Gateway through the JupyterHub service.
+  extraConfig:
+    optionHandler: |
+        from dask_gateway_server.options import Options, Integer, Float, String, Select
+        def cluster_options(user):
+            def option_handler(options):
+                if ":" not in options.image:
+                    raise ValueError("When specifying an image you must also provide a tag")
+                extra_labels = {
+                    "magnote.pub/username": user.name
+                }
+                return {
+                    "worker_cores": options.worker_cores,
+                    "worker_memory": "%fG" % options.worker_memory,
+                    "image": options.image,
+                    "scheduler_extra_pod_labels": extra_labels,
+                    "worker_extra_pod_labels": extra_labels,
+                }
+            return Options(
+                Float("worker_cores", default=0.8, min=0.8, max=4.0, label="Worker Cores"),
+                Float("worker_memory", default=3.3, min=1, max=8, label="Worker Memory (GiB)"),
+                String("image", default="pangeo/base-notebook:2020.07.28", label="Image"),
+                handler=option_handler,
+            )
+
+        c.Backend.cluster_options = cluster_options
+
+        #c.ClusterConfig.cluster_max_cores = 4
+        #c.ClusterConfig.cluster_max_memory = "8 G"
+        c.ClusterConfig.idle_timeout=360
+controller:
+  image:
+    name: daskgateway/dask-gateway-server
+    tag: 0.9.0
+
+traefik:
+  image:
+    name: traefik
+    tag: 2.1.3
+  service:
+    type: ClusterIP  # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
