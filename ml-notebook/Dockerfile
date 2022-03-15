@@ -16,10 +16,8 @@ RUN apt-get update --yes && \
 COPY --chown=${NB_UID}:${NB_GID} ./simhei.ttf /opt/conda/lib/python3.9/site-packages/matplotlib/mpl-data/fonts/ttf/simhei.ttf
 
 # Before notebook script for sparkmagic
-# COPY ./sparkmagic.sh /usr/local/bin/before-notebook.d/sparkmagic.sh
-# RUN chmod +x /usr/local/bin/before-notebook.d/sparkmagic.sh
-COPY ./sparkmagic.sh /usr/local/bin/start-notebook.d/sparkmagic.sh
-RUN chmod +x /usr/local/bin/start-notebook.d/sparkmagic.sh
+COPY ./sparkmagic.sh /usr/local/bin/before-notebook.d/sparkmagic.sh
+RUN chmod +x /usr/local/bin/before-notebook.d/sparkmagic.sh
 
 USER ${NB_USER}
 
@@ -79,6 +77,35 @@ RUN pip install --no-cache-dir \
     fix-permissions "/home/${NB_USER}" && \
     python -m ipykernel install --user --name dask --display-name "Dask"
 COPY ./logo/dask-logo-64x64.png /home/jovyan/.local/share/jupyter/kernels/dask/logo-64x64.png
+
+# Install sparkmonitor
+RUN pip install --no-cache-dir \
+    sparkmonitor \
+    && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+RUN jupyter nbextension install sparkmonitor --py --user && \
+    jupyter nbextension enable  sparkmonitor --py && \
+    jupyter lab build && \
+    ipython profile create && \
+    echo "c.InteractiveShellApp.extensions.append('sparkmonitor.kernelextension')" >>  /home/${NB_USER}/.ipython/profile_default/ipython_kernel_config.py
+
+# Install Tensorflow
+RUN conda create --name tensorflow && \
+    source activate tensorflow
+RUN pip install --no-cache-dir \
+    tensorflow \
+    tensorboard \
+    Keras \
+    && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}" && \
+    python -m ipykernel install --user --name tensorflow --display-name "Tensorflow"
+COPY ./logo/tensorflow-logo-64x64.png /home/jovyan/.local/share/jupyter/kernels/tensorflow/logo-64x64.png
+
+# Install tensorboard
+RUN pip install --no-cache-dir git+https://github.com/cliffwoolley/jupyter_tensorboard.git && \
+    pip install --no-cache-dir git+https://github.com/chaoleili/jupyterlab_tensorboard.git
 
 # clean up
 RUN rm -rf ~/.cache/pip ~/.cache/yarn
