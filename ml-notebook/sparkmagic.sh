@@ -17,6 +17,14 @@ data['kernel_python_credentials']['url']="$livyServer"
 data['kernel_scala_credentials']['url']="$livyServer"
 data['kernel_r_credentials']['url']="$livyServer"
 
+env_dist = os.environ
+for key in env_dist:
+    if key.startswith('SPARK_CONF__'):
+        v = env_dist[key]
+        configKey = key.replace('SPARK_CONF__', '', 1)
+        configKey = configKey.replace('_', '.')
+        data['session_configs']['conf'][configKey] = env_dist[key]
+
 print(json.dumps(data))
 =EOM
 }
