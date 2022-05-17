@@ -1,6 +1,6 @@
 image:
   # -- Image repository
-  repository: harbor.datamodel.jiutian.hq.cmcc:8089/spark/spark-operator
+  repository: ghcr.io/googlecloudplatform/spark-operator
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Overrides the image tag whose default is the chart appVersion.
