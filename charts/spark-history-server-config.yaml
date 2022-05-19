@@ -4,8 +4,9 @@ image:
   pullPolicy: IfNotPresent
 
 service:
-  type: NodePort
-  nodePort: 30808
+  type: ClusterIP
+#  type: NodePort
+#  nodePort: 30808
 
 environment:
 # Note: do not configure Spark history events directory using SPARK_HISTORY_OPTS. It will be
