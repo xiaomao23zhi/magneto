@@ -64,8 +64,8 @@ spec:
           {{- end }}
         {{- end }}
         {{- if .Values.sparkHistory.enabled }}
-        - name: livy-store
-          mountPath: /opt/spark/history
+        - name: spark-history
+          mountPath: /opt/spark/eventLog
         {{- end }}
         - name: livy-conf-cm
           mountPath: /etc/config/livy.conf
@@ -87,7 +87,7 @@ spec:
         {{- else }}
         emptyDir: {}
         {{- end }}
-      - name: spark-event-log
+      - name: spark-history
         {{- if .Values.sparkHistory.enabled }}
         persistentVolumeClaim:
           claimName: {{ .Values.sparkHistory.existingClaim | default (include "livy.fullname" .) }}
