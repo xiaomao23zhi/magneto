@@ -74,7 +74,7 @@ spec:
 
           if [ "$enablePVC" == "true" ]; then
             export SPARK_HISTORY_OPTS="$SPARK_HISTORY_OPTS \
-            -Dspark.history.fs.logDirectory=file:/data/$eventsDir";
+            -Dspark.history.fs.logDirectory=file:/opt/spark/$eventsDir";
           elif [ "$enableGCS" == "true" ]; then
             export SPARK_HISTORY_OPTS="$SPARK_HISTORY_OPTS \
             -Dspark.history.fs.logDirectory=$logDirectory";
