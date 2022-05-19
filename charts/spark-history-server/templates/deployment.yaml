@@ -130,8 +130,8 @@ spec:
             port: historyport
         {{- if .Values.pvc.enablePVC }}
         volumeMounts:
-        - name: data
-          mountPath: /data
+        - name: spark-history
+          mountPath: /opt/spark/eventLog
         {{- else if .Values.gcs.enableGCS }}
         {{- if (not .Values.gcs.enableIAM) }}
         volumeMounts:
@@ -159,7 +159,7 @@ spec:
         {{- end }}
       {{- if .Values.pvc.enablePVC }}
       volumes:
-      - name: data
+      - name: spark-history
         persistentVolumeClaim:
           claimName: {{ .Values.pvc.existingClaimName }}
       {{- else if .Values.gcs.enableGCS }}

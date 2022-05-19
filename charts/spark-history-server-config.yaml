@@ -1,0 +1,37 @@
+image:
+  repository: harbor.datamodel.jiutian.hq.cmcc:8089/spark/spark
+  tag: v3.1.1
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  nodePort: 30808
+
+environment:
+# Note: do not configure Spark history events directory using SPARK_HISTORY_OPTS. It will be
+# configured by this chart based on the values in "pvc", "gcs" or "hdfs" attribute.
+  SPARK_HISTORY_OPTS: "-Dspark.history.fs.cleaner.enabled=true"
+  SPARK_DAEMON_MEMORY: 4G
+  # SPARK_DAEMON_JAVA_OPTS: ...
+  # SPARK_DAEMON_CLASSPATH: ...
+  # SPARK_PUBLIC_DNS: ...
+
+pvc:
+  # to use a file system path for Spark events dir, set 'enablePVC' to true and mention the
+  # name of an already created persistent volume claim in existingClaimName.
+  # The volume will be mounted on /data in the pod
+  enablePVC: true
+  existingClaimName: pvc-spark-history
+  eventsDir: "eventLog"
+
+# Settings for the sub-chart
+# When pvc.enablePVC is true, make sure:
+# pvc.existingClaimName == nfs.pvcName
+nfs:
+  enableExampleNFS: false
+  pvName: nfs-pv
+  pvcName: nfs-pvc
+
+#nodeSelector:
+#  node: service
+
