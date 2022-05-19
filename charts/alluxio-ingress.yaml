@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: alluxio
-  namespace: default
+  namespace: spark
   annotations:
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
