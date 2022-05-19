@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: magnote-scheduler
+  profiles:
+    active: dev
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  aop:
+    auto: true
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.StdDateFormat
+    time-zone: Asia/Shanghai
+
+server:
+  port: 9010
+  servlet:
+    context-path: /scheduler
+  error:
+    whitelabel:
+      enabled: false
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:DatArt}
+
