@@ -30,5 +30,8 @@ journal:
   ### Unique attributes to use when the journal is emptyDir
   medium: ""
 
+  format:
+    runFormat: true
+
 shortCircuit:
   storageClass: hostpath
