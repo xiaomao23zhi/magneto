@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: alluxio
+  namespace: default
+  annotations:
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+    - host: alluxio.matrix.cmcc
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: alluxio-master-0
+              servicePort: web
