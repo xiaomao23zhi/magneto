@@ -1,5 +1,12 @@
+properties:
+  alluxio.worker.data.server.domain.socket.address: /opt/domain
+  alluxio.worker.data.server.domain.socket.as.uuid: true
+
 master:
   count: 1 # For multiMaster mode increase this to >1
+#  properties:
+#    alluxio.security.authentication.type: NOSASL
+#    alluxio.security.authorization.permission.enabled: false
 
 journal:
   # [ Required values ]
@@ -34,4 +41,14 @@ journal:
     runFormat: true
 
 shortCircuit:
+  enabled: true
+  policy: uuid
+  size: 1Mi
+  # volumeType controls the type of shortCircuit volume.
+  # It can be "persistentVolumeClaim" or "hostPath"
+  volumeType: persistentVolumeClaim
+  # Attributes to use if the domain socket volume is PVC
+  pvcName: alluxio-worker-domain-socket
+  accessModes:
+    - ReadWriteOnce
   storageClass: hostpath
