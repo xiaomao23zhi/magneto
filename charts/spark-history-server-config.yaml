@@ -1,5 +1,5 @@
 image:
-  repository: harbor.datamodel.jiutian.hq.cmcc:8089/spark/spark
+  repository: harbor.magnote.pub/spark/spark
   tag: v3.1.1
   pullPolicy: IfNotPresent
 
