@@ -7,7 +7,7 @@ metadata:
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-    - host: alluxio.matrix.cmcc
+    - host: alluxio.magnote.pub
       http:
         paths:
           - path: /
