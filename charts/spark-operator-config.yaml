@@ -30,7 +30,7 @@ uiService:
 
 # -- Ingress URL format.
 # Requires the UI service to be enabled by setting `uiService.enable` to true.
-ingressUrlFormat: "kshjm.cmcc.mobile.cn/{{$appNamespace}}/{{$appName}}"
+ingressUrlFormat: "magnote.pub/{{$appNamespace}}/{{$appName}}"
 
 webhook:
   # -- Enable webhook server

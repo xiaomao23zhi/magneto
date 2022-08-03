@@ -25,7 +25,7 @@ spec:
   type: Scala
   pythonVersion: "3"
   mode: cluster
-  image: "harbor.datamodel.jiutian.hq.cmcc:8089/spark/spark:v3.1.1"
+  image: "harbor.magnote.pub/spark/spark:v3.1.1"
   mainApplicationFile: local:///opt/spark/examples/jars/spark-examples_2.12-3.1.1.jar
   mainClass: org.apache.spark.examples.JavaWordCount
   arguments:
