@@ -59,14 +59,12 @@ spec:
     volumeMounts:
       - name: spark-history
         mountPath: /opt/spark/eventLog
-      - name: alluxio-domain
-        mountPath: /opt/domain
     labels:
       version: 3.1.1
     serviceAccount: spark-operator
   executor:
     cores: 1
-    instances: 1
+    instances: 4
     memory: "512m"
     podSecurityContext:
       runAsUser: 0
@@ -87,6 +85,3 @@ spec:
     - name: spark-history
       persistentVolumeClaim:
         claimName: pvc-spark-history
-    - name: alluxio-domain
-      persistentVolumeClaim:
-        claimName: alluxio-worker-domain-socket
