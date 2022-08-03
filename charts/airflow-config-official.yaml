@@ -1,0 +1,35 @@
+webserverSecretKey: a13c8a19100cd869b8deda46aa786498
+executor: "KubernetesExecutor"
+
+env:
+  - name: AIRFLOW__WEBSERVER__BASE_URL
+    value: http://airflow.matrix.cmcc/airflow/
+
+ingress:
+  enabled: true
+  web:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    path: "/"
+    hosts:
+      - airflow.matrix.cmcc
+  flower:
+    path: "/"
+    hosts:
+      - flower.matrix.cmcc
+webserver:
+  # Create initial user.
+  defaultUser:
+    enabled: true
+    role: Admin
+    username: admin
+    email: admin@example.com
+    firstName: admin
+    lastName: user
+    password: admin
+
+dags:
+  persistence:
+    enabled: true
+    accessMode: ReadWriteMany
+    existingClaim: airflow-dags

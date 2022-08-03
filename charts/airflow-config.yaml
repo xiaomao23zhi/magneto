@@ -1,0 +1,146 @@
+########################################
+## CONFIG | Airflow Configs
+########################################
+airflow:
+  ## configs for the airflow container image
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/configuration/airflow-version.md
+  image:
+    repository: harbor.datamodel.jiutian.hq.cmcc:8089/apache/airflow
+    tag: 2.1.4
+
+  ## the airflow executor type to use
+  executor: KubernetesExecutor
+
+  config:
+    # Security
+    AIRFLOW__API__AUTH_BACKEND: "airflow.api.auth.backend.basic_auth"
+
+    AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "False"
+    AIRFLOW__WEBSERVER__BASE_URL: "http://airflow.matrix.cmcc/airflow"
+    AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+
+  ## a list of users to create
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/security/airflow-users.md
+  users:
+    - username: admin
+      password: admin
+      role: Admin
+      email: admin@example.com
+      firstName: admin
+      lastName: admin
+
+###################################
+## COMPONENT | Airflow Scheduler
+###################################
+scheduler:
+  ## the number of scheduler Pods to run
+  replicas: 1
+
+###################################
+## COMPONENT | Airflow Webserver
+###################################
+web:
+  ## the number of web Pods to run
+  replicas: 1
+
+###################################
+## COMPONENT | Airflow Workers
+###################################
+workers:
+  ## if the airflow workers StatefulSet should be deployed
+  enabled: false
+
+###################################
+## COMPONENT | Triggerer
+###################################
+triggerer:
+  ## if the airflow triggerer should be deployed
+  enabled: false
+
+  ## the number of triggerer Pods to run
+  replicas: 1
+
+###################################
+## COMPONENT | Flower
+###################################
+flower:
+  ## if the airflow flower UI should be deployed
+  enabled: false
+
+###################################
+## CONFIG | Airflow Logs
+###################################
+logs:
+  ## the airflow logs folder
+  path: /opt/airflow/logs
+
+  ## configs for the logs PVC
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/monitoring/log-persistence.md
+  persistence:
+    enabled: false
+
+###################################
+## CONFIG | Airflow DAGs
+###################################
+dags:
+  ## the airflow dags folder
+  path: /opt/airflow/dags
+
+  ## configs for the dags PVC
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/dags/load-dag-definitions.md
+  persistence:
+    enabled: true
+    existingClaim: airflow-dags
+    accessMode: ReadOnlyMany
+
+###################################
+## CONFIG | Kubernetes Ingress
+###################################
+ingress:
+  ## if we should deploy Ingress resources
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/ingress.md
+  enabled: true
+  apiVersion: networking.k8s.io/v1beta1
+  web:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    host: "airflow.matrix.cmcc"
+    path: "/airflow"
+
+###################################
+## DATABASE | PgBouncer
+###################################
+pgbouncer:
+  ## if the pgbouncer Deployment is created
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/database/pgbouncer.md
+  enabled: false
+
+  ## resource requests/limits for the pgbouncer Pods
+  ## [SPEC] https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#resourcerequirements-v1-core
+  resources: {}
+
+  ## sets pgbouncer config: `auth_type`
+  authType: md5
+
+###################################
+## DATABASE | Embedded Postgres
+###################################
+postgresql:
+  ## if the `stable/postgresql` chart is used
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/database/embedded-database.md
+  ## [WARNING] the embedded Postgres is NOT SUITABLE for production deployments of Airflow
+  ## [WARNING] consider using an external database with `externalDatabase.*`
+  enabled: true
+
+  ## configs for the PVC of postgresql
+  persistence:
+    enabled: true
+    storageClass: ""
+    size: 8Gi
+
+###################################
+## DATABASE | Embedded Redis
+###################################
+redis:
+  ## if the `stable/redis` chart is used
+  enabled: false

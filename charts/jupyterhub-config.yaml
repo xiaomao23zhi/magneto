@@ -1,8 +1,10 @@
 proxy:
   secretToken: cb7aceb69fcd924e8837e2688c6978879edbb85494ce98652150a5d73eaac7c6
+# prePuller relates to the hook|continuous-image-puller DaemonsSets
 prePuller:
   continuous:
     enabled: false
+
 singleuser:
   defaultUrl: "/lab"
   cpu:
@@ -25,21 +27,27 @@ singleuser:
         cpu_limit: 4
         mem_limit: "8G"
     - display_name: "1C2G1X"
-        description: "1 CPU cores & 2GB memory, 1 GPU"
-        kubespawner_override:
-          cpu_limit: 1
-          mem_limit: "2G"
-          image: magnote.pub/notebook:dl
-          extra_resource_limits:
-            nvidia.com/gpu: "1"
+      description: "1 CPU cores & 2GB memory, 1 GPU"
+      kubespawner_override:
+        cpu_limit: 1
+        mem_limit: "2G"
+        image: magnote.pub/notebook:dl
+        extra_resource_limits:
+          nvidia.com/gpu: "1"
   extraEnv:
     RESTARTABLE: "yes"
     LIVY_SERVER: "http://livy-server.spark.svc"
     DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: '{JUPYTER_IMAGE_SPEC}'
   storage:
-    dynamic:
-      storageClass: hostpath
-    capacity: 2Gi
+#    dynamic:
+#      storageClass: hostpath
+#    capacity: 2Gi
+#    homeMountPath: /home/jovyan/work
+    type: static
+    static:
+      pvcName: pvc-jupyter
+      subPath: "notebook/{username}"
+    capacity: 1Gi
     homeMountPath: /home/jovyan/work
 hub:
   config:
@@ -75,9 +83,9 @@ hub:
         <div class='form-group' id='kubespawner-profiles-list'>
           <label for="args">Notebook envs</label>
           <select name="profile">
-            <option value="1C2G">1C2G</option>
-            <option value="4C8G">4C8G</option>
-            <option value="1C2G1X">1C2G1X</option>
+            <option value="1c2g">1C2G</option>
+            <option value="4c8g">4C8G</option>
+            <option value="1c2G1x">1C2G1X</option>
           </select>
         </div>
 
@@ -138,7 +146,7 @@ hub:
       # Internal address for the Dask Gateway proxy.
       c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PROXY_ADDRESS", "gateway://traefik-dask-gateway.dask:80")
       # Relative address for the dashboard link.
-      c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PUBLIC_ADDRESS", public_address")
+      c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PUBLIC_ADDRESS", public_address)
       # Use JupyterHub to authenticate with Dask Gateway.
       c.KubeSpawner.environment.setdefault("DASK_GATEWAY__AUTH__TYPE", "jupyterhub")
 
@@ -213,5 +221,11 @@ hub:
 
 ingress:
   enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+#    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#    nginx.ingress.kubernetes.io/rewrite-target: /
+#    nginx.ingress.kubernetes.io/secure-backends: "false"
+#    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
   hosts:
     - jupyter.magnote.pub

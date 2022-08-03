@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-data
+  labels:
+    pv-name: pv-data
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/run/desktop/mnt/host/d/data"
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: jupyter
+  labels:
+    kubernetes.io/metadata.name: jupyter
+    name: jupyter
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-jupyter
+  namespace: jupyter
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: "pv-data"
