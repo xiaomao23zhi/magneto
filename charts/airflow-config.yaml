@@ -5,7 +5,7 @@ airflow:
   ## configs for the airflow container image
   ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/configuration/airflow-version.md
   image:
-    repository: harbor.datamodel.jiutian.hq.cmcc:8089/apache/airflow
+    repository: harbor.datamodel.jiutian.hq.local:8089/apache/airflow
     tag: 2.1.4
 
   ## the airflow executor type to use
@@ -16,7 +16,7 @@ airflow:
     AIRFLOW__API__AUTH_BACKEND: "airflow.api.auth.backend.basic_auth"
 
     AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "False"
-    AIRFLOW__WEBSERVER__BASE_URL: "http://airflow.matrix.cmcc/airflow"
+    AIRFLOW__WEBSERVER__BASE_URL: "http://airflow.matrix.local/airflow"
     AIRFLOW__CORE__LOAD_EXAMPLES: "False"
 
   ## a list of users to create
@@ -104,7 +104,7 @@ ingress:
   web:
     annotations:
       kubernetes.io/ingress.class: nginx
-    host: "airflow.matrix.cmcc"
+    host: "airflow.matrix.local"
     path: "/airflow"
 
 ###################################

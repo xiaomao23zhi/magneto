@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: minio-console.matrix.cmcc
+    - host: minio-console.matrix.local
       http:
         paths:
           - pathType: Prefix

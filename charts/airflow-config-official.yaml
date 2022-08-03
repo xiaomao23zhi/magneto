@@ -3,7 +3,7 @@ executor: "KubernetesExecutor"
 
 env:
   - name: AIRFLOW__WEBSERVER__BASE_URL
-    value: http://airflow.matrix.cmcc/airflow/
+    value: http://airflow.matrix.local/airflow/
 
 ingress:
   enabled: true
@@ -12,11 +12,11 @@ ingress:
       kubernetes.io/ingress.class: nginx
     path: "/"
     hosts:
-      - airflow.matrix.cmcc
+      - airflow.matrix.local
   flower:
     path: "/"
     hosts:
-      - flower.matrix.cmcc
+      - flower.matrix.local
 webserver:
   # Create initial user.
   defaultUser:

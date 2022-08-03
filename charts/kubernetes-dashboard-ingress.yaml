@@ -30,7 +30,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: dashboard.matrix.cmcc
+    - host: dashboard.matrix.local
       http:
         paths:
           - pathType: Prefix
@@ -42,4 +42,4 @@ spec:
             path: /
   tls:
     - hosts:
-        - dashboard.matrix.cmcc
+        - dashboard.matrix.local
