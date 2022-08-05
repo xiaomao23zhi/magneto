@@ -1,0 +1,51 @@
+#
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Support for Python is experimental, and requires building SNAPSHOT image of Apache Spark,
+# with `imagePullPolicy` set to Always
+
+apiVersion: "sparkoperator.k8s.io/v1beta2"
+kind: SparkApplication
+metadata:
+  name: spark-pi
+  namespace: spark
+spec:
+  type: Scala
+  mode: cluster
+  image: "harbor.datamodel.jiutian.hq.cmcc:8089/spark/livy-spark:0.8.0-incubating-spark_3.2.1_2.12-hadoop_3.2.0_cloud"
+  imagePullPolicy: IfNotPresent
+  sparkVersion: "3.2.1"
+  restartPolicy:
+    type: Never
+  mainClass: org.apache.spark.examples.SparkPi
+  mainApplicationFile: local:///opt/spark/examples/jars/spark-examples_2.12-3.2.1.jar
+  sparkConf:
+    spark.eventLog.enabled: "true"
+    spark.eventLog.dir: "s3a://spark/eventLog"
+    spark.hadoop.fs.s3a.endpoint: "http://minio.storage.svc:9000"
+    spark.hadoop.fs.s3a.access.key: "a3e7d88d4fa8"
+    spark.hadoop.fs.s3a.secret.key: "8b622eb12ff7"
+    spark.hadoop.fs.s3a.fast.upload: "true"
+    spark.hadoop.fs.s3a.path.style.access: "true"
+    spark.hadoop.fs.s3a.impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
+  driver:
+    cores: 1
+    memory: "512m"
+    serviceAccount: spark-operator-spark
+  executor:
+    cores: 1
+    instances: 1
+    memory: "512m"
+

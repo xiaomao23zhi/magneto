@@ -3,8 +3,14 @@ helm upgrade --cleanup-on-fail --install ingress-nginx ./ingress-nginx -f ingres
 
 # Install kubernetes-dashboard
 helm upgrade --cleanup-on-fail --install kubernetes-dashboard ./kubernetes-dashboard -n kubernetes-dashboard --create-namespace
-kubectl create -f kubernetes-dashboard-ingress.yaml
+kubectl create -f dashboard.yaml
 kubectl -n kubernetes-dashboard create token dashboard-admin --duration 0
+
+# Install minio
+helm upgrade --cleanup-on-fail --install minio ./minio --namespace storage --values ./minio-config.yaml
+
+# Spark operator
+helm upgrade --cleanup-on-fail --install spark-operator ./spark-operator --namespace compute --create-namespace --values ./spark-operator-config.yaml
 
 # Install Jupyter
 kubectl create -f ./jupyterhub.yaml

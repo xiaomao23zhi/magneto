@@ -1,4 +1,4 @@
-FROM jupyter/all-spark-notebook:2021-11-10
+FROM jupyter/all-spark-notebook:spark-3.2.1
 
 MAINTAINER xiaomao23zhi <https://github.com/xiaomao23zhi/>
 
@@ -9,11 +9,8 @@ RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
     graphviz \
     julia \
-    language-pack-zh-hans && \
+    && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
- 
-# Fix font
-COPY --chown=${NB_UID}:${NB_GID} ./simhei.ttf /opt/conda/lib/python3.9/site-packages/matplotlib/mpl-data/fonts/ttf/simhei.ttf
 
 # Before notebook script for sparkmagic
 COPY ./sparkmagic.sh /usr/local/bin/before-notebook.d/sparkmagic.sh
@@ -26,16 +23,12 @@ COPY --chown=${NB_UID}:${NB_GID} user-settings/ /home/jovyan/.jupyter/lab/user-s
 
 # Python packages
 RUN pip install --no-cache-dir \
-    scikit-learn \
-    category-encoders \
-    kmodes \
     jupyter-resource-usage \
     jupyterlab_execute_time \
     jupyterlab-system-monitor \
     jupyterlab-lsp \
     python-lsp-server[all] \
-    papermill \
-    xgboost && \
+    && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
@@ -78,34 +71,11 @@ RUN pip install --no-cache-dir \
     python -m ipykernel install --user --name dask --display-name "Dask"
 COPY ./logo/dask-logo-64x64.png /home/jovyan/.local/share/jupyter/kernels/dask/logo-64x64.png
 
-# Install sparkmonitor
-RUN pip install --no-cache-dir \
-    sparkmonitor \
-    && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
-RUN jupyter nbextension install sparkmonitor --py --user && \
-    jupyter nbextension enable  sparkmonitor --py && \
-    jupyter lab build && \
-    ipython profile create && \
-    echo "c.InteractiveShellApp.extensions.append('sparkmonitor.kernelextension')" >>  /home/${NB_USER}/.ipython/profile_default/ipython_kernel_config.py
-
-# Install Tensorflow
-RUN conda create --name tensorflow && \
-    source activate tensorflow
-RUN pip install --no-cache-dir \
-    tensorflow \
-    tensorboard \
-    Keras \
-    && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}" && \
-    python -m ipykernel install --user --name tensorflow --display-name "Tensorflow"
-COPY ./logo/tensorflow-logo-64x64.png /home/jovyan/.local/share/jupyter/kernels/tensorflow/logo-64x64.png
-
-# Install tensorboard
-RUN pip install --no-cache-dir git+https://github.com/cliffwoolley/jupyter_tensorboard.git && \
-    pip install --no-cache-dir git+https://github.com/chaoleili/jupyterlab_tensorboard.git
+# Install Airflow
+RUN AIRFLOW_VERSION=2.2.5 \
+    PYTHON_VERSION="$(python --version | cut -d " " -f 2 | cut -d "." -f 1-2)" && \
+    CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt" && \
+    pip install --no-cache-dir "apache-airflow[apache.livy,apache.spark,celery,http,jdbc,papermill,sftp]==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
 
 # clean up
 RUN rm -rf ~/.cache/pip ~/.cache/yarn

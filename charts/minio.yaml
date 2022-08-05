@@ -1,0 +1,21 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: storage
+  labels:
+    kubernetes.io/metadata.name: storage
+    name: storage
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: minio
+  namespace: storage
+  labels:
+    app: minio
+  annotations:
+    meta.helm.sh/release-name: minio
+    meta.helm.sh/release-namespace: minio
+data:
+  rootPassword: OGI2MjJlYjEyZmY3
+  rootUser: YTNlN2Q4OGQ0ZmE4

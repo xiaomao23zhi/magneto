@@ -8,11 +8,11 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: gcr.io/spark-operator/spark-operator
+  repository: ghcr.io/googlecloudplatform/spark-operator
   # -- Image pull policy
   pullPolicy: IfNotPresent
-  # -- Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  # -- if set, override the image tag whose default is the chart appVersion.
+  tag: ""
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -74,6 +74,12 @@ podSecurityContext: {}
 # securityContext -- Operator container security context
 securityContext: {}
 
+# volumes - Operator volumes
+volumes: []
+
+# volumeMounts - Operator volumeMounts
+volumeMounts: []
+
 webhook:
   # -- Enable webhook server
   enable: false
@@ -90,6 +96,8 @@ webhook:
   cleanupAnnotations:
     "helm.sh/hook": pre-delete, pre-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded
+    # -- Webhook Timeout in seconds
+  timeout: 30
 
 metrics:
   # -- Enable prometheus metric scraping
