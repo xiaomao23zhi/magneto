@@ -24,7 +24,7 @@ metadata:
 spec:
   type: Scala
   mode: cluster
-  image: "harbor.datamodel.jiutian.hq.cmcc:8089/spark/livy-spark:0.8.0-incubating-spark_3.2.1_2.12-hadoop_3.2.0_cloud"
+  image: "spark/livy-spark:0.8.0-incubating-spark_3.2.1_2.12-hadoop_3.2.0_cloud"
   imagePullPolicy: IfNotPresent
   sparkVersion: "3.2.1"
   restartPolicy:

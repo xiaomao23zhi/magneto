@@ -19,3 +19,15 @@ metadata:
 data:
   rootPassword: OGI2MjJlYjEyZmY3
   rootUser: YTNlN2Q4OGQ0ZmE4
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: aws-secrets
+  namespace: compute
+  labels:
+    app: aws-secrets
+data:
+  aws-secret-key: OGI2MjJlYjEyZmY3
+  aws-access-key: YTNlN2Q4OGQ0ZmE4
+

@@ -116,7 +116,7 @@ spec:
             export SPARK_HISTORY_OPTS="$SPARK_HISTORY_OPTS \
             -Dspark.history.fs.logDirectory=$logDirectory";
           fi;
-          /opt/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer;
+          ${SPARK_HOME}/sbin/start-history-server.sh
         envFrom:
         - configMapRef:
             name: {{ include "spark-history-server.fullname" . }}
