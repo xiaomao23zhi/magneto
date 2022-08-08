@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -qq update
 RUN apt-get -qq upgrade -y
 RUN apt-get -qq install -y git wget
-RUN wget -q https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -P /tmp
+RUN wget -q https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -P /tmp
 RUN tar xf /tmp/apache-maven-3.6.3-bin.tar.gz -C /opt
 RUN ln -s /opt/apache-maven-3.6.3 /opt/maven
 RUN apt-get -qq install gnupg
