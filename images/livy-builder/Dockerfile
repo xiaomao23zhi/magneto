@@ -16,8 +16,7 @@ RUN chmod 644 /etc/apt/trusted.gpg.d/scalasbt-release.gpg
 RUN apt-get update
 RUN apt-get install sbt
 RUN apt-get -qq install -y r-base
-RUN apt install -y python python-pip
-RUN apt install -y python3 python3-pip
+RUN apt install -y python python3 python3-pip
 # We remove ensurepip since it adds no functionality since pip is
 # installed on the image and it just takes up 1.6MB on the image
 RUN rm -r /usr/lib/python*/ensurepip
