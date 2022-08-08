@@ -36,19 +36,19 @@ singleuser:
           nvidia.com/gpu: "1"
   extraEnv:
     RESTARTABLE: "yes"
-    LIVY_SERVER: "http://livy-server.spark.svc"
+    LIVY_SERVER: "http://livy-server.compute.svc"
     DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: '{JUPYTER_IMAGE_SPEC}'
   storage:
-#    dynamic:
-#      storageClass: hostpath
-#    capacity: 2Gi
-#    homeMountPath: /home/jovyan/work
-    type: static
-    static:
-      pvcName: pvc-jupyter
-      subPath: "notebook/{username}"
-    capacity: 1Gi
+    dynamic:
+      storageClass: hostpath
+    capacity: 2Gi
     homeMountPath: /home/jovyan/work
+#    type: static
+#    static:
+#      pvcName: pvc-jupyter
+#      subPath: "notebook/{username}"
+#    capacity: 1Gi
+#    homeMountPath: /home/jovyan/work
 hub:
   config:
     Authenticator:
